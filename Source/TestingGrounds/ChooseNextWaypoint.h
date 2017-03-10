@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Just Geezy Games 2017.
 
 #pragma once
 
@@ -18,7 +18,6 @@ class TESTINGGROUNDS_API UChooseNextWaypoint : public UBTTaskNode
 
 	
 public:
-	TArray<AActor*> GetPatrolPoints(UBehaviorTreeComponent & OwnerComp);
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Blackboard")
@@ -26,8 +25,4 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Blackboard")
 	struct FBlackboardKeySelector WaypointKey;
-
-private:
-	void SetNextWaypoint(UBehaviorTreeComponent& OwnerComp);
-	void CycleIndex(UBehaviorTreeComponent& OwnerComp);
 };

@@ -1,59 +1,36 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Just Geezy Games 2017.
 
 #include "TestingGrounds.h"
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "PatrollingGuard.h"
+#include "PatrolRouteComponent.h"
 #include "ChooseNextWaypoint.h"
 
 
 
 EBTNodeResult::Type UChooseNextWaypoint::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
+	//Gets Patrol Points
+	auto PatrolRoute = OwnerComp.GetAIOwner()->GetPawn()->FindComponentByClass<UPatrolRouteComponent>();
+	if (!ensure(PatrolRoute)) { return EBTNodeResult::Failed; }
+	auto PatrolPoints = PatrolRoute->GetPatrolPoints();
 
-	SetNextWaypoint(OwnerComp);
-	CycleIndex(OwnerComp);
-	/*auto AIController = OwnerComp.GetAIOwner();
-	auto ControlledPawn = AIController->GetPawn();
-	auto PatrollingGuard = Cast<APatrollingGuard>(ControlledPawn);
-	auto PatrolPoints = PatrollingGuard->GetPatrolPoints();
+	//Warns if no patrol points
+	if (PatrolPoints.Num() == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("A guard is missing patrol points"))
+		return EBTNodeResult::Failed;
+	}
 
+	//Sets Next Waypoint
 	UBlackboardComponent* Blackboard = OwnerComp.GetBlackboardComponent();
+	if (!Blackboard) { return EBTNodeResult::Failed; }
 	auto Index = Blackboard->GetValueAsInt(IndexKey.SelectedKeyName);
 	Blackboard->SetValueAsObject(WaypointKey.SelectedKeyName, PatrolPoints[Index]);
 
-	Index++;
-	auto LengthMod = Index % PatrolPoints.Num();
-	Blackboard->SetValueAsInt(IndexKey.SelectedKeyName, LengthMod);*/
+	//Cycles Index
+	auto NextIndex = (Index + 1) % PatrolPoints.Num();
+	Blackboard->SetValueAsInt(IndexKey.SelectedKeyName, NextIndex);
 
-
-	//UE_LOG(LogTemp, Warning, TEXT("Waypoint index: %i"), Index)
 	return EBTNodeResult::Succeeded;
-}
-
-TArray<AActor*> UChooseNextWaypoint::GetPatrolPoints(UBehaviorTreeComponent& OwnerComp)
-{
-	auto AIController = OwnerComp.GetAIOwner();
-	auto ControlledPawn = AIController->GetPawn();
-	auto PatrollingGuard = Cast<APatrollingGuard>(ControlledPawn);
-	auto PatrolPoints = PatrollingGuard->GetPatrolPoints();
-	return PatrolPoints;
-}
-
-void UChooseNextWaypoint::SetNextWaypoint(UBehaviorTreeComponent& OwnerComp)
-{
-	auto PatrolPoints = GetPatrolPoints(OwnerComp);
-	UBlackboardComponent* Blackboard = OwnerComp.GetBlackboardComponent();
-	auto Index = Blackboard->GetValueAsInt(IndexKey.SelectedKeyName);
-	Blackboard->SetValueAsObject(WaypointKey.SelectedKeyName, PatrolPoints[Index]);
-}
-
-void UChooseNextWaypoint::CycleIndex(UBehaviorTreeComponent& OwnerComp)
-{
-	auto PatrolPoints = GetPatrolPoints(OwnerComp);
-	UBlackboardComponent* Blackboard = OwnerComp.GetBlackboardComponent();
-	auto Index = Blackboard->GetValueAsInt(IndexKey.SelectedKeyName);
-	Index ++;
-	auto LengthMod = Index % PatrolPoints.Num();
-	Blackboard->SetValueAsInt(IndexKey.SelectedKeyName, LengthMod);
 }

@@ -5,6 +5,8 @@
 #include "GameFramework/Actor.h"
 #include "Gun.generated.h"
 
+class AGun;
+
 UCLASS()
 class TESTINGGROUNDS_API AGun : public AActor
 {
@@ -56,15 +58,13 @@ public:
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	class UAnimMontage* FireAnimation;
-
-
+	
+	/** Fires a projectile. */
+	void OnFire();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	/** Fires a projectile. */
-	void OnFire();
 
 public:	
 	// Called every frame

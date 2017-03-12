@@ -62,8 +62,8 @@ public:
 	FVector GunOffset;
 
 	/** Projectile class to spawn */
-	//UPROPERTY(EditDefaultsOnly, Category=Projectile)
-	//TSubclassOf<class ABallProjectile> ProjectileClass;
+	UPROPERTY(EditDefaultsOnly, Category=Projectile)
+	TSubclassOf<class AGun> GunBlueprint;
 
 	/** Sound to play each time we fire */
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
@@ -76,6 +76,9 @@ public:
 	/** Whether to use motion controller location for aiming. */
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	//uint32 bUsingMotionControllers : 1;
+
+private:
+	AGun* Gun;
 
 protected:
 	

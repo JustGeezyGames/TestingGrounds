@@ -7,7 +7,7 @@
 
 class AGun;
 
-UCLASS()
+UCLASS()//ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TESTINGGROUNDS_API AGun : public AActor
 {
 	GENERATED_BODY()
@@ -60,6 +60,7 @@ public:
 	class UAnimMontage* FireAnimation;
 	
 	/** Fires a projectile. */
+	UFUNCTION(BlueprintCallable, category = "input")
 	void OnFire();
 
 protected:
